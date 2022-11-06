@@ -1,6 +1,8 @@
-[submodule "glfw"]
-	path = glfw
+[submodule "external/glfw"]
+	path = external/glfw
 	url = https://github.com/glfw/glfw
-[submodule "stb"]
-	path = stb
+	branch = 3.3-stable
+[submodule "external/stb"]
+	path = external/stb
 	url = https://github.com/nothings/stb
+	branch = master

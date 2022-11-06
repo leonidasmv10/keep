@@ -12,15 +12,15 @@ void GLFWErrorCallback(int code, const char* description)
 
 // Error function for OpenGL
 void GLAPIENTRY
-MessageCallback( GLenum source,
-                 GLenum type,
-                 GLuint id,
-                 GLenum severity,
-                 GLsizei length,
-                 const GLchar* message,
-                 const void* userParam )
+MessageCallback(GLenum source,
+                GLenum type,
+                GLuint id,
+                GLenum severity,
+                GLsizei length,
+                const GLchar* message,
+                const void* userParam)
 {
-    std::cerr << "GL CALLBACK:" << ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ) <<
+    std::cerr << "GL CALLBACK:" << (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "") <<
         "type = 0x" << type <<
         ", severity = 0x" << severity <<
         ", message =" << message << "\n";
@@ -29,9 +29,8 @@ MessageCallback( GLenum source,
 // Entry point
 int main(void)
 {
-
     glfwSetErrorCallback(GLFWErrorCallback);
-   
+
     // Initialization of glfw.
     if (!glfwInit())
     {
@@ -48,7 +47,6 @@ int main(void)
     auto window = glfwCreateWindow(800, 600, "Hello Triangle", nullptr, nullptr);
     if (window == nullptr)
     {
-
         glfwTerminate();
 
         std::cin.get();
@@ -59,13 +57,12 @@ int main(void)
     //Set the OpenGL context
     glfwMakeContextCurrent(window);
 
-
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-      {
-      std::cout << "Failed to initialize GLAD" << std::endl;
-      glfwTerminate();
-      return EXIT_FAILURE;
-      }
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        glfwTerminate();
+        return EXIT_FAILURE;
+    }
 
     // Enable capture of debug output.
     glEnable(GL_DEBUG_OUTPUT);
@@ -80,10 +77,10 @@ int main(void)
     glClearColor(0.5f, 0.0f, 0.0f, 1.0f);
 
     // Create a triangle geometry
-    GLfloat triangle[3*2] = {
-    -0.5f, -0.5f,
-    0.5f, -0.5f,
-    0.0f, 0.5f
+    GLfloat triangle[3 * 2] = {
+        -0.5f, -0.5f,
+        0.5f, -0.5f,
+        0.0f, 0.5f
     };
 
     // Create a vertex array
@@ -98,16 +95,14 @@ int main(void)
 
     // Populate the vertex buffer
     glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float)*2, nullptr);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, nullptr);
     glEnableVertexAttribArray(0);
 
 
     // Vertex shader code
     const std::string vertexShaderSrc = R"(
 #version 430 core
-
 layout(location = 0) in vec4 position;
-
 void main()
 {
 gl_Position = position;
@@ -116,7 +111,6 @@ gl_Position = position;
     // Fragment shader code
     const std::string fragmentShaderSrc = R"(
 #version 430 core
-
 out vec4 color;
 void main()
 {
@@ -149,7 +143,7 @@ color = vec4(1);
     glUseProgram(shaderProgram);
 
     // Main loop
-    while(!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
 

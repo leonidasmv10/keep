@@ -1,16 +1,13 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(Lab01)
-
+project(keep)
 find_package(OpenGL REQUIRED)
 
-add_subdirectory(glad)
-add_subdirectory(glfw)
+add_subdirectory(external/glad)
+add_subdirectory(external/glfw)
 
-include_directories(
-                    vendor/glfw/include/ 
-                    vendor/stb/ 
-                   )
+include_directories(external/glfw/include/)
+include_directories(external/stb/)
 
-add_executable(lab01 main.cpp)
-target_link_libraries(lab01 glfw glad OpenGL::GL ${CMAKE_DL_LIBS})
+add_executable(${PROJECT_NAME} main.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw glad OpenGL::GL)
