@@ -5,6 +5,7 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "Camera_Test.h"
+#include "Cube3D.h"
 #include "PerspectiveCamera.h"
 #include "Shader.h"
 
@@ -19,9 +20,9 @@ public:
     unsigned Init();
     unsigned Run();
 
-    void processInput(GLFWwindow *window);
+    void processInput(GLFWwindow* window);
 
-    
+
 private:
     GLuint vertexArrayId;
     GLuint vertexBufferId;
@@ -29,25 +30,21 @@ private:
     GLFWwindow* window;
 
     unsigned int texture;
-    Shader ourShader;
+    Shader shader;
     unsigned int VBO, VAO, EBO;
 
-    unsigned int texture1, texture2,index_t;
     // settings
     const unsigned int SCR_WIDTH = 800;
     const unsigned int SCR_HEIGHT = 600;
-    
+
     PerspectiveCamera camera;
 
     Board board;
-    
-    // Camera_Test camera;
-    float lastY = SCR_HEIGHT / 2.0f;
-    bool firstMouse = true;
 
-    GLuint vao_{};
-    
+    Cube3D cube = Cube3D();
+
+
     // timing
-    float deltaTime = 0.0f;	// time between current frame and last frame
+    float deltaTime = 0.0f; // time between current frame and last frame
     float lastFrame = 0.0f;
 };

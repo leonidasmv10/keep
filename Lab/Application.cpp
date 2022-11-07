@@ -81,125 +81,29 @@ unsigned Application::Init()
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
 
 
-    ourShader = Shader(std::string(SHADERS_DIR) + std::string("model.vert"),
+    shader = Shader(std::string(SHADERS_DIR) + std::string("model.vert"),
                        std::string(SHADERS_DIR) + std::string("model.frag"));
 
     camera = PerspectiveCamera();
     board = Board();
+    cube = Cube3D();
 
-    {
-        constexpr float vertices2[] = {
-            0.5f, 0.5f, 0.0f, // top right
-            0.5f, -0.5f, 0.0f, // bottom right
-            -0.5f, -0.5f, 0.0f, // bottom left
-            -0.5f, 0.5f, 0.0f // top left 
-        };
-        const unsigned int indices[] = {
-            // note that we start from 0!
-            0, 1, 3, // first Triangle
-            1, 2, 3 // second Triangle
-        };
-        unsigned int vbo, ebo;
-        glGenVertexArrays(1, &vao_);
-        glGenBuffers(1, &vbo);
-        glGenBuffers(1, &ebo);
-
-        glBindVertexArray(vao_);
-
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), static_cast<void*>(0));
-        glEnableVertexAttribArray(0);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
-    }
+    cube.Init();
 
 
-    {
-        float vertices[] = {
-            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-            0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-            0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-            0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-            -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-
-            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-            0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-            0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-            0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-            -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
-            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-
-            -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-            -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-            -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-
-            0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-            0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-            0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-            0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-            0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-            0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-
-            -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-            0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
-            0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-            0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-            -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-
-            -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-            0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-            0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-            0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-            -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
-            -0.5f, 0.5f, -0.5f, 0.0f, 1.0f
-        };
-        // world space positions of our cubes
-
-        unsigned int VBO, VAO;
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-
-        glBindVertexArray(VAO);
-
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-        // position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
-        // texture coord attribute
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-        glEnableVertexAttribArray(1);
-    }
-    
     TextureManager::GetInstance()->LoadTexture2DRGBA("container",
                                                      "resources/textures/container.jpg",
                                                      0, false);
-    
+
     TextureManager::GetInstance()->LoadTexture2DRGBA("awesomeface",
                                                      "resources/textures/awesomeface.png",
                                                      1, true);
+    
 
-    // texture1 = TextureManager::GetInstance()->GetIdByName("container");
-    // texture2 = TextureManager::GetInstance()->GetIdByName("awesomeface");
-
-   
-    ourShader.Bind();
-    ourShader.UploadUniformInt("texture1", 0);
-    ourShader.UploadUniformInt("texture2", 1);
-
-
+    shader.Bind();
+    shader.UploadUniformInt("texture1", 0);
+    shader.UploadUniformInt("texture2", 1);
+    
     return 1;
 }
 
@@ -226,38 +130,7 @@ unsigned Application::Run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-        // bind textures on corresponding texture units
-        glActiveTexture(GL_TEXTURE0);
-        // glBindTexture(GL_TEXTURE_2D, texture1);
-        glActiveTexture(GL_TEXTURE1);
-        // glBindTexture(GL_TEXTURE_2D, texture2);
-
-        // activate shader
-        ourShader.Bind();
-
-        // pass projection matrix to shader (note that in this case it could change every frame)
-        glm::mat4 projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f,
-                                                100.0f);
-        ourShader.UploadUniformMat4("projection", projection);
-
-        // camera/view transformation
-        glm::mat4 view = camera.GetViewMatrix();
-        ourShader.UploadUniformMat4("view", view);
-
-        // render boxes
-        glBindVertexArray(VAO);
-
-        // calculate the model matrix for each object and pass it to shader before drawing
-        glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        model = glm::translate(model, glm::vec3(0.0f));
-        float angle = 0.0f;
-        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-        ourShader.UploadUniformMat4("model", model);
-
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-
-        // glBindVertexArray(vao_);
-        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        cube.Render(shader, camera);
 
         glfwSwapBuffers(window);
     }
@@ -270,16 +143,6 @@ void Application::processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-
-    // if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-    // 	camera.ProcessKeyboard(FORWARD, deltaTime);
-    // if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-    // 	camera.ProcessKeyboard(BACKWARD, deltaTime);
-    // if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-    // 	camera.ProcessKeyboard(LEFT, deltaTime);
-    // if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-    // 	camera.ProcessKeyboard(RIGHT, deltaTime);
-
 
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
     {
