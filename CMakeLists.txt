@@ -27,8 +27,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC glfw glad OpenGL::GL)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${EXTRA_LIBS})
 target_include_directories(${PROJECT_NAME} PUBLIC "${PROJECT_BINARY_DIR}" ${EXTRA_INCLUDES})
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
+#set_target_properties(${PROJECT_NAME} PROPERTIES
+#    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
 
 # set_target_properties(Engine PROPERTIES
 #     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
