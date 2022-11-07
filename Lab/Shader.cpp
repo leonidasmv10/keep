@@ -95,6 +95,51 @@ void Shader::UploadUniformFloat(const std::string& name, float value) const
     glUniform1f(glGetUniformLocation(ShaderProgram, name.c_str()), value);
 }
 
+void Shader::UploadUniformVec2(const std::string& name, const glm::vec2& value) const
+{
+    glUniform2fv(glGetUniformLocation(ShaderProgram, name.c_str()), 1, &value[0]);
+}
+
+void Shader::UploadUniformVec2(const std::string& name, float x, float y) const
+{
+    glUniform2f(glGetUniformLocation(ShaderProgram, name.c_str()), x, y);
+}
+
+void Shader::UploadUniformVec3(const std::string& name, const glm::vec3& value) const
+{
+    glUniform3fv(glGetUniformLocation(ShaderProgram, name.c_str()), 1, &value[0]);
+}
+
+void Shader::UploadUniformVec3(const std::string& name, float x, float y, float z) const
+{
+    glUniform3f(glGetUniformLocation(ShaderProgram, name.c_str()), x, y, z);
+}
+
+void Shader::UploadUniformVec4(const std::string& name, const glm::vec4& value) const
+{
+    glUniform4fv(glGetUniformLocation(ShaderProgram, name.c_str()), 1, &value[0]);
+}
+
+void Shader::UploadUniformVec4(const std::string& name, float x, float y, float z, float w) const
+{
+    glUniform4f(glGetUniformLocation(ShaderProgram, name.c_str()), x, y, z, w);
+}
+
+void Shader::UploadUniformMat2(const std::string& name, const glm::mat2& mat) const
+{
+    glUniformMatrix2fv(glGetUniformLocation(ShaderProgram, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
+void Shader::UploadUniformMat3(const std::string& name, const glm::mat3& mat) const
+{
+    glUniformMatrix3fv(glGetUniformLocation(ShaderProgram, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
+void Shader::UploadUniformMat4(const std::string& name, const glm::mat4& mat) const
+{
+    glUniformMatrix4fv(glGetUniformLocation(ShaderProgram, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
 void Shader::CompileShader(GLenum shaderType, const std::string& shaderSrc)
 {
 }
