@@ -28,6 +28,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC glfw glad OpenGL::GL)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${EXTRA_LIBS})
 target_include_directories(${PROJECT_NAME} PUBLIC "${PROJECT_BINARY_DIR}" ${EXTRA_INCLUDES})
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE STB_IMAGE_IMPLEMENTATION)
+target_compile_definitions(${PROJECT_NAME} PRIVATE STB_IMAGE_STATIC)
+
 #set_target_properties(${PROJECT_NAME} PROPERTIES
 #    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
 
@@ -37,5 +40,12 @@ add_custom_command(
         COMMAND ${CMAKE_COMMAND} -E copy_directory
                 ${CMAKE_SOURCE_DIR}/resources
                 ${CMAKE_CURRENT_BINARY_DIR}/resources)
+
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+  TEXTURES_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/textures/")
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+  SHADERS_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/shaders/")
 
 target_sources(${PROJECT_NAME} PRIVATE ${ASSETS})

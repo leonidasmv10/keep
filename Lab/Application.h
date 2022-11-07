@@ -2,7 +2,8 @@
 #include <string>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-#include "Camera.h"
+#include "Camera_Test.h"
+#include "PerspectiveCamera.h"
 #include "Shader.h"
 
 
@@ -34,7 +35,8 @@ private:
     const unsigned int SCR_WIDTH = 800;
     const unsigned int SCR_HEIGHT = 600;
     
-    Camera camera;
+    PerspectiveCamera camera;
+    // Camera_Test camera;
     float lastY = SCR_HEIGHT / 2.0f;
     bool firstMouse = true;
 

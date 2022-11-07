@@ -79,9 +79,11 @@ unsigned Application::Init()
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << "\n";
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
 
-    ourShader = Shader("resources/shaders/model.vert", "resources/shaders/model.frag");
 
-    camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+    ourShader = Shader(std::string(SHADERS_DIR) + std::string("model.vert"),
+                       std::string(SHADERS_DIR) + std::string("model.frag"));
+
+    camera = PerspectiveCamera();
 
     float vertices[] = {
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
@@ -251,7 +253,7 @@ unsigned Application::Run()
         ourShader.Bind();
 
         // pass projection matrix to shader (note that in this case it could change every frame)
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f,
+        glm::mat4 projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f,
                                                 100.0f);
         ourShader.UploadUniformMat4("projection", projection);
 
@@ -281,17 +283,47 @@ unsigned Application::Run()
     return 1;
 }
 
+
 void Application::processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
+    // if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    // 	camera.ProcessKeyboard(FORWARD, deltaTime);
+    // if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    // 	camera.ProcessKeyboard(BACKWARD, deltaTime);
+    // if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    // 	camera.ProcessKeyboard(LEFT, deltaTime);
+    // if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    // 	camera.ProcessKeyboard(RIGHT, deltaTime);
+
+
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
+    {
+        glm::vec3 pos = camera.GetPosition();
+        pos += glm::vec3(0, 0, -1) * 1.0f * deltaTime;
+        camera.SetPosition(pos);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        glm::vec3 pos = camera.GetPosition();
+        pos += glm::vec3(0, 0, 1) * 1.0f * deltaTime;
+        camera.SetPosition(pos);
+    }
+
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, deltaTime);
+    {
+        glm::vec3 pos = camera.GetPosition();
+        pos += glm::vec3(1, 0, 0) * 1.0f * deltaTime;
+        camera.SetPosition(pos);
+    }
+
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+    {
+        glm::vec3 pos = camera.GetPosition();
+        pos += glm::vec3(-1, 0, 0) * 1.0f * deltaTime;
+        camera.SetPosition(pos);
+    }
 }
