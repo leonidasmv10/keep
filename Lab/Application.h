@@ -1,7 +1,9 @@
 ﻿#pragma once
+#include <string>
+
+#include "Shader.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-#include "GLFWApplication/GLFWApplication.h"
 
 class Application
 {
@@ -18,4 +20,8 @@ private:
     GLuint vertexBufferId;
 
     GLFWwindow* window;
+
+    unsigned int texture;
+    Shader ourShader;
+    unsigned int VBO, VAO, EBO;
 };
