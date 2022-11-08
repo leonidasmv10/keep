@@ -7,6 +7,9 @@
 
 Board::Board()
 {
+    lastColorPlayer = red;
+    lastColorBoard = white;
+    
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
@@ -37,48 +40,46 @@ void Board::Init()
         for (int j = 0; j < n; ++j)
         {
             glm::vec3 position = glm::vec3(j * 2.0f - n, 0.0f, i * 2.0f - n);
-            glm::vec3 scale = glm::vec3(0.5f);
+            glm::vec3 scale = glm::vec3(0.4f);
+
+            cubes[i][j] = nullptr;
 
             switch (player[i][j])
             {
             case RED:
-                cubes.push_back(new Cube3D(position, scale));
-                cubes.back()->SetColor(red);
+                cubes[i][j] = new Cube3D(position, scale);
+                cubes[i][j]->SetColor(red);
                 break;
 
             case BLUE:
-                cubes.push_back(new Cube3D(position, scale));
-                cubes.back()->SetColor(blue);
+                cubes[i][j] = new Cube3D(position, scale);
+                cubes[i][j]->SetColor(blue);
                 break;
 
             case SELECT:
-                cubes.push_back(new Cube3D(position, scale));
-                cubes.back()->SetColor(green);
+                cubes[i][j] = new Cube3D(position, scale);
+                cubes[i][j]->SetColor(green);
                 break;
             }
 
             board[i][j] = new Quad2D(glm::vec3(j * 2.0f - n, -0.5f, i * 2.0f - n), scale);
-
-
             board[i][j]->SetColor(flag ? black : white);
             flag = !flag;
         }
         flag = !flag;
     }
+    board[dx][dy]->SetColor(green);
 }
 
 void Board::Render(Shader& shader, PerspectiveCamera& camera)
 {
-    for (const auto& c : cubes)
+    for (int i = 0; i < n; i++)
     {
-        c->Render(shader, camera);
-    }
-
-    for (const auto& c : board)
-    {
-        for (const auto& b : c)
+        for (int j = 0; j < n; j++)
         {
-            b->Render(shader, camera);
+            board[i][j]->Render(shader, camera);
+            if (cubes[i][j] == nullptr) continue;
+            cubes[i][j]->Render(shader, camera);
         }
     }
 }
@@ -99,6 +100,23 @@ void Board::MoveCube(const unsigned axisX, const unsigned axisY)
 {
     int x = dx + axisX;
     int y = dy + axisY;
-    if (x >= n && x < 0) return;
-    if (y >= n && y < 0) return;
+    if (x >= n || x < 0) return;
+    if (y >= n || y < 0) return;
+    // std::cout << "x: " << x << "\n";
+
+    board[dx][dy]->SetColor(lastColorBoard);
+
+    if (cubes[dx][dy] != nullptr)
+        cubes[dx][dy]->SetColor(lastColorPlayer);
+
+    dx = x;
+    dy = y;
+
+    lastColorBoard = board[dx][dy]->GetColor();
+    board[dx][dy]->SetColor(green);
+    if (cubes[dx][dy] != nullptr)
+    {
+        lastColorPlayer = cubes[dx][dy]->GetColor();
+        cubes[dx][dy]->SetColor(green);
+    }
 }

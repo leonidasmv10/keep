@@ -34,11 +34,11 @@ private:
     const int n = 8;
     BoardDataType player[8][8];
     Quad2D* board[8][8];
-    // std::array<std::array<BoardDataType, 8>, 8> board;
-    std::vector<Cube3D*> cubes;
+    Cube3D* cubes[8][8];
 
     unsigned dx = 0, dy = 0;
-    glm::vec4 lastColor = red;
+    glm::vec4 lastColorPlayer ;
+    glm::vec4 lastColorBoard ;;
 
     const glm::vec4 red = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
     const glm::vec4 blue = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
