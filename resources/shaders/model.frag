@@ -11,5 +11,6 @@ uniform vec4 color;
 
 void main()
 {
-   FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.2f)*color;
+    FragColor = color;
+//    FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.2f) * color;
 }

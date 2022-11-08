@@ -96,10 +96,6 @@ unsigned Application::Init()
     board = new Board();
     board->Init();
 
-    quad = new Quad2D();
-
-    quad->Init();
-
     TextureManager::GetInstance()->LoadTexture2DRGBA("container",
                                                      std::string(TEXTURES_DIR) + "container.jpg",
                                                      0, false);
@@ -132,8 +128,7 @@ unsigned Application::Run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         board->Render(*shader, camera);
-        // quad->Render(*shader, camera);
-
+        
         glfwSwapBuffers(window);
     }
 

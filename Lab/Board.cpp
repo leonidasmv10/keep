@@ -31,15 +31,14 @@ Board::Board()
 
 void Board::Init()
 {
+    bool flag = false;
     for (int i = 0; i < n; ++i)
     {
         for (int j = 0; j < n; ++j)
         {
-            glm::vec3 position = glm::vec3(j * 2.1f - n, 0.0f, i * 2.1f - n);
-            glm::vec3 scale = glm::vec3(0.4f);
+            glm::vec3 position = glm::vec3(j * 2.0f - n, 0.0f, i * 2.0f - n);
+            glm::vec3 scale = glm::vec3(0.5f);
 
-            board[i][j] = new Quad2D(glm::vec3(j * 2.1f - n, -0.5f, i * 2.1f - n), scale);
-            board[i][j]->SetColor(yellow);
             switch (player[i][j])
             {
             case RED:
@@ -57,7 +56,14 @@ void Board::Init()
                 cubes.back()->SetColor(green);
                 break;
             }
+
+            board[i][j] = new Quad2D(glm::vec3(j * 2.0f - n, -0.5f, i * 2.0f - n), scale);
+
+
+            board[i][j]->SetColor(flag ? black : white);
+            flag = !flag;
         }
+        flag = !flag;
     }
 }
 

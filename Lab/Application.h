@@ -33,8 +33,6 @@ private:
     Shader *shader;
     PerspectiveCamera camera;
     Board *board;
-
-    Quad2D *quad;
     
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
