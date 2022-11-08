@@ -141,19 +141,23 @@ void Application::InputCallback()
     {
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            board->MoveCube(-1,0);
+            board->Move(-1,0);
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
-            board->MoveCube(1,0);
+            board->Move(1,0);
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            board->MoveCube(0,1);
+            board->Move(0,1);
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            board->MoveCube(0,-1);
+            board->Move(0,-1);
+        }
+        if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
+        {
+            board->MoveCube();
         }
     };
 }
