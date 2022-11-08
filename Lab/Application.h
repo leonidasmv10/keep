@@ -4,7 +4,6 @@
 #include "Board.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-#include "Camera_Test.h"
 #include "Cube3D.h"
 #include "PerspectiveCamera.h"
 #include "Shader.h"
@@ -19,32 +18,18 @@ public:
     unsigned ParseArguments(int argc, char** argv);
     unsigned Init();
     unsigned Run();
-
-    void processInput(GLFWwindow* window);
-
+    
+    static const int width = 800;
+    static const int height = 800;
 
 private:
-    GLuint vertexArrayId;
-    GLuint vertexBufferId;
+    void Input(GLFWwindow* window);
 
     GLFWwindow* window;
-
-    unsigned int texture;
     Shader shader;
-    unsigned int VBO, VAO, EBO;
-
-    // settings
-    const unsigned int SCR_WIDTH = 800;
-    const unsigned int SCR_HEIGHT = 600;
-
     PerspectiveCamera camera;
-
     Board board;
-
-    Cube3D cube = Cube3D();
-
-
-    // timing
-    float deltaTime = 0.0f; // time between current frame and last frame
+    
+    float deltaTime = 0.0f;
     float lastFrame = 0.0f;
 };

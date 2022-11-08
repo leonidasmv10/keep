@@ -49,7 +49,24 @@ public:
         this->RecalculateMatrix();
     }
 
-   
+    void SetMovement(const float deltaTime, const float velocity)
+    {
+        this->Movement.x += velocity * deltaTime;
+        this->Movement.z += velocity * deltaTime;
+
+        this->Position = glm::vec3(sin(Movement.x) * radius, 3.0f, cos(Movement.z) * radius);
+        this->RecalculateMatrix();
+    }
+
+    void SetAngle(const float angle)
+    {
+        CameraFrustrum.angle = angle;
+    }
+
+    float GetAngle() const
+    {
+        return CameraFrustrum.angle;
+    }
 
 protected:
     void RecalculateMatrix() override;
@@ -58,6 +75,9 @@ protected:
     glm::vec3 LookAt;
     glm::vec3 UpVector;
     Frustrum CameraFrustrum;
+
+    glm::vec3 Movement;
+    float radius = 10.0f;
 };
 
 #endif // PERSPECTIVECAMERA_H_

@@ -27,7 +27,7 @@ Application::Application(const std::string& name, const std::string& version)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    window = glfwCreateWindow(800, 600, name.c_str(), nullptr, nullptr);
+    window = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
     if (window == nullptr)
     {
         glfwTerminate();
@@ -63,9 +63,7 @@ Application::Application(const std::string& name, const std::string& version)
 Application::~Application()
 {
     glfwTerminate();
-    glDisableVertexAttribArray(0);
-    glDeleteBuffers(1, &vertexBufferId);
-    glDeleteVertexArrays(1, &vertexArrayId);
+    
 }
 
 unsigned Application::ParseArguments(int argc, char** argv)
@@ -82,13 +80,14 @@ unsigned Application::Init()
 
 
     shader = Shader(std::string(SHADERS_DIR) + std::string("model.vert"),
-                       std::string(SHADERS_DIR) + std::string("model.frag"));
+                    std::string(SHADERS_DIR) + std::string("model.frag"));
 
     camera = PerspectiveCamera();
+    camera.SetMovement(1, 0.5);
     board = Board();
-    cube = Cube3D();
 
-    cube.Init();
+    board.Init();
+    
 
 
     TextureManager::GetInstance()->LoadTexture2DRGBA("container",
@@ -98,12 +97,12 @@ unsigned Application::Init()
     TextureManager::GetInstance()->LoadTexture2DRGBA("awesomeface",
                                                      "resources/textures/awesomeface.png",
                                                      1, true);
-    
+
 
     shader.Bind();
     shader.UploadUniformInt("texture1", 0);
     shader.UploadUniformInt("texture2", 1);
-    
+
     return 1;
 }
 
@@ -114,23 +113,16 @@ unsigned Application::Run()
     {
         glfwPollEvents();
 
-        // per-frame time logic
-        // --------------------
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-
-        // input
-        // -----
-        processInput(window);
-
-        // render
-        // ------
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        
+        Input(window);
+        
+        glClearColor(0.5f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-        cube.Render(shader, camera);
+        
+        board.Render(shader, camera);
 
         glfwSwapBuffers(window);
     }
@@ -138,37 +130,20 @@ unsigned Application::Run()
     return 1;
 }
 
-
-void Application::processInput(GLFWwindow* window)
+void Application::Input(GLFWwindow* window)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-    {
-        glm::vec3 pos = camera.GetPosition();
-        pos += glm::vec3(0, 0, -1) * 1.0f * deltaTime;
-        camera.SetPosition(pos);
-    }
+    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+        camera.SetMovement(deltaTime, 0.5f);
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-    {
-        glm::vec3 pos = camera.GetPosition();
-        pos += glm::vec3(0, 0, 1) * 1.0f * deltaTime;
-        camera.SetPosition(pos);
-    }
+    if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS)
+        camera.SetMovement(deltaTime, -0.5f);
 
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-    {
-        glm::vec3 pos = camera.GetPosition();
-        pos += glm::vec3(1, 0, 0) * 1.0f * deltaTime;
-        camera.SetPosition(pos);
-    }
+    if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+        camera.SetAngle(camera.GetAngle() - 1.0f * deltaTime);
 
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-    {
-        glm::vec3 pos = camera.GetPosition();
-        pos += glm::vec3(-1, 0, 0) * 1.0f * deltaTime;
-        camera.SetPosition(pos);
-    }
+    if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+        camera.SetAngle(camera.GetAngle() + 1.0f * deltaTime);
 }

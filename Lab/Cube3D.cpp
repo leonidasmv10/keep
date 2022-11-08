@@ -5,16 +5,33 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
+#include "Application.h"
 #include "GeometricTools.h"
 #include "VertexArray.h"
 
 Cube3D::Cube3D()
 {
+    position = glm::vec3(0.0f, 0.0f, 0.0f);
+    scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    this->Init();
+}
+
+Cube3D::Cube3D(const glm::vec3& position, const glm::vec3& scale)
+{
+    this->position = position;
+    this->scale = scale;
+    this->Init();
+}
+
+Cube3D::~Cube3D()
+{
+    glDisableVertexAttribArray(0);
+    glDeleteBuffers(1, &VBO);
+    glDeleteVertexArrays(1, &VAO);
 }
 
 void Cube3D::Init()
 {
-
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
@@ -32,26 +49,27 @@ void Cube3D::Init()
     glEnableVertexAttribArray(1);
 }
 
-void Cube3D::Render(Shader& shader, Camera& camera)
+void Cube3D::Render(Shader& shader, PerspectiveCamera& camera)
 {
     glActiveTexture(GL_TEXTURE0);
     glActiveTexture(GL_TEXTURE1);
 
     shader.Bind();
 
-    glm::mat4 projection = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f,
-                                            100.0f);
+    const glm::mat4 projection = glm::perspective(camera.GetAngle(),
+                                                  static_cast<float>(Application::width) / static_cast<float>(
+                                                      Application::height), 0.1f,
+                                                  100.0f);
     shader.UploadUniformMat4("projection", projection);
 
     const glm::mat4 view = camera.GetViewMatrix();
     shader.UploadUniformMat4("view", view);
-    
+
     glBindVertexArray(VAO);
-    
+
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0.0f));
-    float angle = 0.0f;
-    model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+    model = glm::scale(model, scale);
+    model = glm::translate(model, position);
     shader.UploadUniformMat4("model", model);
 
     glDrawArrays(GL_TRIANGLES, 0, 36);
