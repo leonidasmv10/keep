@@ -53,8 +53,6 @@ void Board::Init()
                 cubes[i][j] = new Cube3D(position, scale);
                 cubes[i][j]->SetColor(blue);
                 break;
-
-          
             }
 
             board[i][j] = new Quad2D(glm::vec3(j * 2.0f - n, -0.5f, i * 2.0f - n), scale);
@@ -134,12 +132,14 @@ void Board::MoveCube()
         int px = cubeClickPos.first;
         int py = cubeClickPos.second;
 
+        player[px][py] = NONE;
+
         cubes[px][py]->SetPosition(glm::vec3(dy * 2.0f - n, 0.0f, dx * 2.0f - n));
         cubes[px][py]->SetColor(green);
 
         auto temp = cubes[dx][dy];
-        cubes[dx][dy] = cubes[cubeClickPos.first][cubeClickPos.second];
-        cubes[cubeClickPos.first][cubeClickPos.second] = temp;
+        cubes[dx][dy] = cubes[px][py];
+        cubes[px][py] = temp;
 
         lastColorCube = lastColorClick;
 

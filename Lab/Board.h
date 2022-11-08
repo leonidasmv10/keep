@@ -8,8 +8,6 @@
 // non 0
 // red 1
 // blue 2
-// select 3
-// click 4
 
 enum BoardDataType
 {
