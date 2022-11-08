@@ -43,6 +43,7 @@ private:
     // MOVE CUBE
     bool hasPair = false;
     std::pair<int,int> cubeClickPos;
+    BoardDataType cubeClickType;
     glm::vec4 lastColorClick;
 
     // COLOR

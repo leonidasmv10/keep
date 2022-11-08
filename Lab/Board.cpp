@@ -99,7 +99,7 @@ void Board::Move(const unsigned axisX, const unsigned axisY)
 
     board[dx][dy]->SetColor(lastColorBoard);
 
-    if (cubes[dx][dy] != nullptr)
+    if (player[dx][dy] != NONE)
         cubes[dx][dy]->SetColor(lastColorCube);
 
     dx = x;
@@ -107,11 +107,13 @@ void Board::Move(const unsigned axisX, const unsigned axisY)
 
     lastColorBoard = board[dx][dy]->GetColor();
     board[dx][dy]->SetColor(green);
-    if (cubes[dx][dy] != nullptr)
+    if (player[dx][dy] != NONE)
     {
         lastColorCube = cubes[dx][dy]->GetColor();
-        lastColorClick = cubes[dx][dy]->GetColor();
         cubes[dx][dy]->SetColor(green);
+
+        if (!hasPair)
+            lastColorClick = lastColorCube;
     }
 }
 
@@ -119,7 +121,8 @@ void Board::MoveCube()
 {
     if (!hasPair)
     {
-        if (cubes[dx][dy] == nullptr) return;
+        if (player[dx][dy] == NONE) return;
+        cubeClickType = player[dx][dy];
         cubes[dx][dy]->SetColor(yellow);
         lastColorCube = yellow;
         cubeClickPos = std::pair(dx, dy);
@@ -129,8 +132,10 @@ void Board::MoveCube()
     {
         if (player[dx][dy] != NONE) return;
 
-        int px = cubeClickPos.first;
-        int py = cubeClickPos.second;
+        const int px = cubeClickPos.first;
+        const int py = cubeClickPos.second;
+
+        if (dx == px && dy == py) return;
 
         player[px][py] = NONE;
 
@@ -141,14 +146,23 @@ void Board::MoveCube()
         cubes[dx][dy] = cubes[px][py];
         cubes[px][py] = temp;
 
+        player[dx][dy] = cubeClickType;
+
+        // if (lastColorCube == yellow)
+        // {
+        //     switch (cubeClickType)
+        //     {
+        //     case RED: lastColorCube = red;
+        //         break;
+        //     case BLUE: lastColorCube = blue;
+        //         break;
+        //     }
+        // }
+
         lastColorCube = lastColorClick;
-
-        if (lastColorClick == red)
-            player[dx][dy] = RED;
-
-        else if (lastColorClick == blue)
-            player[dx][dy] = BLUE;
 
         hasPair = false;
     }
+
+    Print();
 }
