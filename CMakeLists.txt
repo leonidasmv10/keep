@@ -43,9 +43,9 @@ add_custom_command(
 
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
-  TEXTURES_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/textures/")
+  TEXTURES_DIR="resources/textures/")
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
-  SHADERS_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources/shaders/")
+  SHADERS_DIR="resources/shaders/")
 
 target_sources(${PROJECT_NAME} PRIVATE ${ASSETS})

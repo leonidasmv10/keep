@@ -23,6 +23,11 @@ public:
         this->scale = scale;
     }
 
+    void SetColor(const glm::vec4& color)
+    {
+        this->color = color;
+    }
+
     glm::vec3 GetPosition() const
     {
         return this->position;
@@ -33,9 +38,15 @@ public:
         return this->scale;
     }
 
+    glm::vec4 GetColor() const
+    {
+        return this->color;
+    }
+
 private:
     unsigned int VBO, VAO;
 
     glm::vec3 position;
     glm::vec3 scale;
+    glm::vec4 color;
 };

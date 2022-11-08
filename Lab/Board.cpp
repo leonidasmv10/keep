@@ -38,18 +38,22 @@ void Board::Init()
             glm::vec3 position = glm::vec3(j * 2.1f - n, 1.0f, i * 2.1f - n);
             glm::vec3 scale = glm::vec3(0.4f);
 
+
             switch (board[i][j])
             {
             case RED:
-                cube.push_back(new Cube3D(position, scale));
+                cubes.push_back(new Cube3D(position, scale));
+                cubes.back()->SetColor(red);
                 break;
 
             case BLUE:
-                cube.push_back(new Cube3D(position, scale));
+                cubes.push_back(new Cube3D(position, scale));
+                cubes.back()->SetColor(blue);
                 break;
 
             case SELECT:
-                cube.push_back(new Cube3D(position, scale));
+                cubes.push_back(new Cube3D(position, scale));
+                cubes.back()->SetColor(green);
                 break;
             }
         }
@@ -58,7 +62,7 @@ void Board::Init()
 
 void Board::Render(Shader& shader, PerspectiveCamera& camera)
 {
-    for (const auto& c : cube)
+    for (const auto& c : cubes)
     {
         c->Render(shader, camera);
     }

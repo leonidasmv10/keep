@@ -13,6 +13,7 @@ Cube3D::Cube3D()
 {
     position = glm::vec3(0.0f, 0.0f, 0.0f);
     scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     this->Init();
 }
 
@@ -20,6 +21,7 @@ Cube3D::Cube3D(const glm::vec3& position, const glm::vec3& scale)
 {
     this->position = position;
     this->scale = scale;
+    this->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     this->Init();
 }
 
@@ -51,8 +53,8 @@ void Cube3D::Init()
 
 void Cube3D::Render(Shader& shader, PerspectiveCamera& camera)
 {
-    /*glActiveTexture(GL_TEXTURE0);
-    glActiveTexture(GL_TEXTURE1);*/
+    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE1);
 
     shader.Bind();
 
@@ -65,7 +67,7 @@ void Cube3D::Render(Shader& shader, PerspectiveCamera& camera)
 
     const glm::mat4 view = camera.GetViewMatrix();
     shader.UploadUniformMat4("view", view);
-    //shader.UploadUniformVec4("color", glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+    shader.UploadUniformVec4("color", color);
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::scale(model, scale);
