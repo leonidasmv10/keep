@@ -5,6 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "GeometricTools.h"
 #include "TextureManager.h"
 
 Application::Application(const std::string& name, const std::string& version)
@@ -35,6 +36,13 @@ Application::Application(const std::string& name, const std::string& version)
         return;
     }
 
+    glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+    {
+        auto w = static_cast<Application*>(glfwGetWindowUserPointer(window));
+        if (w->key_input) w->key_input(key, scancode, action, mods);
+    });
+    glfwSetWindowUserPointer(window, this);
+
     //Set the OpenGL context
     glfwMakeContextCurrent(window);
 
@@ -44,6 +52,8 @@ Application::Application(const std::string& name, const std::string& version)
         glfwTerminate();
         return;
     }
+
+    InputCallback();
 
     // Enable capture of debug output.
     glEnable(GL_DEBUG_OUTPUT);
@@ -78,20 +88,24 @@ unsigned Application::Init()
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
 
 
-    shader = new Shader(std::string(SHADERS_DIR) + "model.vert", std::string(SHADERS_DIR) +"model.frag");
+    shader = new Shader(std::string(SHADERS_DIR) + "model.vert", std::string(SHADERS_DIR) + "model.frag");
 
     camera = PerspectiveCamera();
-    camera.SetMovement(1, 0.5);
+    camera.SetMovement(1, 0.0);
 
     board = new Board();
     board->Init();
 
+    quad = new Quad2D();
+
+    quad->Init();
+
     TextureManager::GetInstance()->LoadTexture2DRGBA("container",
-                                                     "resources/textures/container.jpg",
+                                                     std::string(TEXTURES_DIR) + "container.jpg",
                                                      0, false);
 
     TextureManager::GetInstance()->LoadTexture2DRGBA("awesomeface",
-                                                     "resources/textures/awesomeface.png",
+                                                     std::string(TEXTURES_DIR) + "awesomeface.png",
                                                      1, true);
 
     shader->Bind();
@@ -118,11 +132,23 @@ unsigned Application::Run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         board->Render(*shader, camera);
+        // quad->Render(*shader, camera);
 
         glfwSwapBuffers(window);
     }
 
     return 1;
+}
+
+void Application::InputCallback()
+{
+    key_input = [&](int key, int sancode, int action, int mods)
+    {
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        {
+            std::cout << "Arriba\n";
+        }
+    };
 }
 
 void Application::Input(GLFWwindow* window)

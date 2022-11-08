@@ -13,20 +13,20 @@ Board::Board()
         {
             if (i < 2)
             {
-                board[i][j] = RED;
+                player[i][j] = RED;
             }
             else if (i < 6)
             {
-                board[i][j] = NONE;
+                player[i][j] = NONE;
             }
             else
             {
-                board[i][j] = BLUE;
+                player[i][j] = BLUE;
             }
         }
     }
 
-    board[0][0] = SELECT;
+    player[dx][dy] = SELECT;
 }
 
 void Board::Init()
@@ -35,11 +35,12 @@ void Board::Init()
     {
         for (int j = 0; j < n; ++j)
         {
-            glm::vec3 position = glm::vec3(j * 2.1f - n, 1.0f, i * 2.1f - n);
+            glm::vec3 position = glm::vec3(j * 2.1f - n, 0.0f, i * 2.1f - n);
             glm::vec3 scale = glm::vec3(0.4f);
 
-
-            switch (board[i][j])
+            board[i][j] = new Quad2D(glm::vec3(j * 2.1f - n, -0.5f, i * 2.1f - n), scale);
+            board[i][j]->SetColor(yellow);
+            switch (player[i][j])
             {
             case RED:
                 cubes.push_back(new Cube3D(position, scale));
@@ -66,11 +67,19 @@ void Board::Render(Shader& shader, PerspectiveCamera& camera)
     {
         c->Render(shader, camera);
     }
+
+    for (const auto& c : board)
+    {
+        for (const auto& b : c)
+        {
+            b->Render(shader, camera);
+        }
+    }
 }
 
 void Board::Print()
 {
-    for (const auto& i : board)
+    for (const auto& i : player)
     {
         for (const auto& j : i)
         {
@@ -78,4 +87,12 @@ void Board::Print()
         }
         std::cout << "\n";
     }
+}
+
+void Board::MoveCube(const unsigned axisX, const unsigned axisY)
+{
+    int x = dx + axisX;
+    int y = dy + axisY;
+    if (x >= n && x < 0) return;
+    if (y >= n && y < 0) return;
 }

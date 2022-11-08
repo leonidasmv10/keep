@@ -4,8 +4,19 @@ namespace GeometricTools
 {
     constexpr std::array<float, 3 * 2> UnitTriangle2D = {-0.5f, -0.5f, 0.5f, -0.5f, 0.0f, 0.5f}; // [2,3]
 
+    inline constexpr float UnitQuad2D[3 * 4] = {
+        1.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, -1.0f,
+        -1.0f, 0.0f, -1.0f,
+        -1.0f, 0.0f, 1.0f
+    };
 
-    inline float UnitCube3D[5 * 6 * 6] = {
+    const int InidicesQuad2D[2 * 3] = {
+        0, 1, 3,
+        1, 2, 3
+    };
+
+    inline constexpr float UnitCube3D[5 * 6 * 6] = {
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
         0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
         0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
