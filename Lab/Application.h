@@ -26,9 +26,9 @@ private:
     void Input(GLFWwindow* window);
 
     GLFWwindow* window;
-    Shader shader;
+    Shader *shader;
     PerspectiveCamera camera;
-    Board board;
+    Board *board;
     
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
