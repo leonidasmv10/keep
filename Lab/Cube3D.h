@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "PerspectiveCamera.h"
 #include "Shader.h"
+#include "VertexArray.h"
 
 class Cube3D
 {
@@ -44,7 +45,9 @@ public:
     }
 
 private:
-    unsigned int VBO, VAO;
+    
+    std::shared_ptr<VertexArray> vertexArray;
+    std::shared_ptr<VertexBuffer> vertexBuffer;
 
     glm::vec3 position;
     glm::vec3 scale;

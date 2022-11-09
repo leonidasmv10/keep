@@ -136,7 +136,6 @@ void Board::MoveCube()
         const int py = cubeClickPos.second;
 
         if (dx == px && dy == py) return;
-
         player[px][py] = NONE;
 
         cubes[px][py]->SetPosition(glm::vec3(dy * 2.0f - n, 0.0f, dx * 2.0f - n));
@@ -147,22 +146,8 @@ void Board::MoveCube()
         cubes[px][py] = temp;
 
         player[dx][dy] = cubeClickType;
-
-        // if (lastColorCube == yellow)
-        // {
-        //     switch (cubeClickType)
-        //     {
-        //     case RED: lastColorCube = red;
-        //         break;
-        //     case BLUE: lastColorCube = blue;
-        //         break;
-        //     }
-        // }
-
         lastColorCube = lastColorClick;
 
         hasPair = false;
     }
-
-    Print();
 }

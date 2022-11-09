@@ -87,26 +87,22 @@ unsigned Application::Init()
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << "\n";
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
 
-
     shader = new Shader(std::string(SHADERS_DIR) + "model.vert", std::string(SHADERS_DIR) + "model.frag");
 
     camera = PerspectiveCamera();
+    camera.SetFrustrum(PerspectiveCamera::Frustrum(45.0f, width, height, 0.1f, 100.0f));
     camera.SetMovement(1, 0.0);
 
     board = new Board();
     board->Init();
 
-    TextureManager::GetInstance()->LoadTexture2DRGBA("container",
-                                                     std::string(TEXTURES_DIR) + "container.jpg",
+    TextureManager::GetInstance()->LoadTexture2DRGBA("cube_texture",
+                                                     std::string(TEXTURES_DIR) + "cube_texture.png",
                                                      0, false);
 
-    TextureManager::GetInstance()->LoadTexture2DRGBA("awesomeface",
-                                                     std::string(TEXTURES_DIR) + "awesomeface.png",
-                                                     1, true);
 
     shader->Bind();
-    shader->UploadUniformInt("texture1", 0);
-    shader->UploadUniformInt("texture2", 1);
+    shader->UploadUniformInt("texture1", 0.5f);
 
     return 1;
 }
@@ -118,7 +114,7 @@ unsigned Application::Run()
     {
         glfwPollEvents();
 
-        float currentFrame = static_cast<float>(glfwGetTime());
+        const float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
@@ -128,7 +124,7 @@ unsigned Application::Run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         board->Render(*shader, camera);
-        
+
         glfwSwapBuffers(window);
     }
 
@@ -141,19 +137,19 @@ void Application::InputCallback()
     {
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            board->Move(-1,0);
+            board->Move(-1, 0);
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
-            board->Move(1,0);
+            board->Move(1, 0);
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            board->Move(0,1);
+            board->Move(0, 1);
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            board->Move(0,-1);
+            board->Move(0, -1);
         }
         if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
         {

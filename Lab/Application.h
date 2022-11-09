@@ -20,20 +20,19 @@ public:
     unsigned ParseArguments(int argc, char** argv);
     unsigned Init();
     unsigned Run();
-    
+
     static const int width = 800;
     static const int height = 800;
 
 private:
-    
     void InputCallback();
     void Input(GLFWwindow* window);
 
     GLFWwindow* window;
-    Shader *shader;
+    Shader* shader;
     PerspectiveCamera camera;
-    Board *board;
-    
+    Board* board;
+
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
 

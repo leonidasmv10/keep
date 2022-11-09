@@ -37,6 +37,7 @@ public:
         this->Position = pos;
         this->RecalculateMatrix();
     }
+    
 
 protected:
     virtual void RecalculateMatrix();

@@ -15,6 +15,19 @@ public:
         float height;
         float near;
         float far;
+
+        Frustrum()
+        {
+        }
+
+        Frustrum(float angle, float width, float height, float near, float far)
+            : angle(angle),
+              width(width),
+              height(height),
+              near(near),
+              far(far)
+        {
+        }
     };
 
 public:
@@ -61,12 +74,14 @@ public:
     void SetAngle(const float angle)
     {
         CameraFrustrum.angle = angle;
+        this->RecalculateMatrix();
     }
 
     float GetAngle() const
     {
         return CameraFrustrum.angle;
     }
+
 
 protected:
     void RecalculateMatrix() override;
