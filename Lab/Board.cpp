@@ -7,147 +7,147 @@
 
 Board::Board()
 {
-    lastColorCube = red;
-    lastColorBoard = white;
+	lastColorCube = red;
+	lastColorBoard = white;
 
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            if (i < 2)
-            {
-                player[i][j] = RED;
-            }
-            else if (i < 6)
-            {
-                player[i][j] = NONE;
-            }
-            else
-            {
-                player[i][j] = BLUE;
-            }
-        }
-    }
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (i < 2)
+			{
+				player[i][j] = RED;
+			}
+			else if (i < 6)
+			{
+				player[i][j] = NONE;
+			}
+			else
+			{
+				player[i][j] = BLUE;
+			}
+		}
+	}
 }
 
 void Board::Init()
 {
-    bool flag = false;
-    for (int i = 0; i < n; ++i)
-    {
-        for (int j = 0; j < n; ++j)
-        {
-            glm::vec3 position = glm::vec3(j * 2.0f - n, 0.0f, i * 2.0f - n);
-            glm::vec3 scale = glm::vec3(0.4f);
+	bool flag = false;
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < n; ++j)
+		{
+			glm::vec3 position = glm::vec3(j * 2.0f - n, 0.0f, i * 2.0f - n);
+			glm::vec3 scale = glm::vec3(0.4f);
 
-            cubes[i][j] = nullptr;
+			cubes[i][j] = nullptr;
 
-            switch (player[i][j])
-            {
-            case RED:
-                cubes[i][j] = new Cube3D(position, scale);
-                cubes[i][j]->SetColor(red);
-                break;
+			switch (player[i][j])
+			{
+			case RED:
+				cubes[i][j] = new Cube3D(position, scale);
+				cubes[i][j]->SetColor(red);
+				break;
 
-            case BLUE:
-                cubes[i][j] = new Cube3D(position, scale);
-                cubes[i][j]->SetColor(blue);
-                break;
-            }
+			case BLUE:
+				cubes[i][j] = new Cube3D(position, scale);
+				cubes[i][j]->SetColor(blue);
+				break;
+			}
 
-            board[i][j] = new Quad2D(glm::vec3(j * 2.0f - n, -0.5f, i * 2.0f - n), scale);
-            board[i][j]->SetColor(flag ? black : white);
-            flag = !flag;
-        }
-        flag = !flag;
-    }
-    board[dx][dy]->SetColor(green);
-    cubes[dx][dy]->SetColor(green);
+			board[i][j] = new Quad2D(glm::vec3(j * 2.0f - n, -0.5f, i * 2.0f - n), scale);
+			board[i][j]->SetColor(flag ? black : white);
+			flag = !flag;
+		}
+		flag = !flag;
+	}
+	board[dx][dy]->SetColor(green);
+	cubes[dx][dy]->SetColor(green);
 }
 
 void Board::Render(Shader& shader, PerspectiveCamera& camera)
 {
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            board[i][j]->Render(shader, camera);
-            if (cubes[i][j] == nullptr) continue;
-            cubes[i][j]->Render(shader, camera);
-        }
-    }
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			board[i][j]->Render(shader, camera);
+			if (cubes[i][j] == nullptr) continue;
+			cubes[i][j]->Render(shader, camera);
+		}
+	}
 }
 
 void Board::Print()
 {
-    for (const auto& i : player)
-    {
-        for (const auto& j : i)
-        {
-            std::cout << j;
-        }
-        std::cout << "\n";
-    }
+	for (const auto& i : player)
+	{
+		for (const auto& j : i)
+		{
+			std::cout << j;
+		}
+		std::cout << "\n";
+	}
 }
 
 void Board::Move(const unsigned axisX, const unsigned axisY)
 {
-    int x = dx + axisX;
-    int y = dy + axisY;
-    if (x >= n || x < 0) return;
-    if (y >= n || y < 0) return;
+	int x = dx + axisX;
+	int y = dy + axisY;
+	if (x >= n || x < 0) return;
+	if (y >= n || y < 0) return;
 
-    board[dx][dy]->SetColor(lastColorBoard);
+	board[dx][dy]->SetColor(lastColorBoard);
 
-    if (player[dx][dy] != NONE)
-        cubes[dx][dy]->SetColor(lastColorCube);
+	if (player[dx][dy] != NONE)
+		cubes[dx][dy]->SetColor(lastColorCube);
 
-    dx = x;
-    dy = y;
+	dx = x;
+	dy = y;
 
-    lastColorBoard = board[dx][dy]->GetColor();
-    board[dx][dy]->SetColor(green);
-    if (player[dx][dy] != NONE)
-    {
-        lastColorCube = cubes[dx][dy]->GetColor();
-        cubes[dx][dy]->SetColor(green);
+	lastColorBoard = board[dx][dy]->GetColor();
+	board[dx][dy]->SetColor(green);
+	if (player[dx][dy] != NONE)
+	{
+		lastColorCube = cubes[dx][dy]->GetColor();
+		cubes[dx][dy]->SetColor(green);
 
-        if (!hasPair)
-            lastColorClick = lastColorCube;
-    }
+		if (!hasPair)
+			lastColorClick = lastColorCube;
+	}
 }
 
 void Board::MoveCube()
 {
-    if (!hasPair)
-    {
-        if (player[dx][dy] == NONE) return;
-        cubeClickType = player[dx][dy];
-        cubes[dx][dy]->SetColor(yellow);
-        lastColorCube = yellow;
-        cubeClickPos = std::pair(dx, dy);
-        hasPair = true;
-    }
-    else
-    {
-        if (player[dx][dy] != NONE) return;
+	if (!hasPair)
+	{
+		if (player[dx][dy] == NONE) return;
+		cubeClickType = player[dx][dy];
+		cubes[dx][dy]->SetColor(yellow);
+		lastColorCube = yellow;
+		cubeClickPos = std::pair(dx, dy);
+		hasPair = true;
+	}
+	else
+	{
+		if (player[dx][dy] != NONE) return;
 
-        const int px = cubeClickPos.first;
-        const int py = cubeClickPos.second;
+		const int px = cubeClickPos.first;
+		const int py = cubeClickPos.second;
 
-        if (dx == px && dy == py) return;
-        player[px][py] = NONE;
+		if (dx == px && dy == py) return;
+		player[px][py] = NONE;
 
-        cubes[px][py]->SetPosition(glm::vec3(dy * 2.0f - n, 0.0f, dx * 2.0f - n));
-        cubes[px][py]->SetColor(green);
+		cubes[px][py]->SetPosition(glm::vec3(dy * 2.0f - n, 0.0f, dx * 2.0f - n));
+		cubes[px][py]->SetColor(green);
 
-        auto temp = cubes[dx][dy];
-        cubes[dx][dy] = cubes[px][py];
-        cubes[px][py] = temp;
+		auto temp = cubes[dx][dy];
+		cubes[dx][dy] = cubes[px][py];
+		cubes[px][py] = temp;
 
-        player[dx][dy] = cubeClickType;
-        lastColorCube = lastColorClick;
+		player[dx][dy] = cubeClickType;
+		lastColorCube = lastColorClick;
 
-        hasPair = false;
-    }
+		hasPair = false;
+	}
 }

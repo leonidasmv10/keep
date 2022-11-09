@@ -29,12 +29,14 @@ private:
     void Input(GLFWwindow* window);
 
     GLFWwindow* window;
-    Shader* shader;
     PerspectiveCamera camera;
-    Board* board;
+    std::shared_ptr<Shader> shader;
+    std::shared_ptr<Board> board;
 
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
+
+    bool isBinding = false;
 
     std::function<void(int key, int scancode, int action, int mods)> key_input;
 };

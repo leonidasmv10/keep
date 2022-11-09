@@ -68,6 +68,8 @@ Application::Application(const std::string& name, const std::string& version)
     //     }, 0);
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 Application::~Application()
@@ -87,21 +89,28 @@ unsigned Application::Init()
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << "\n";
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
 
-    shader = new Shader(std::string(SHADERS_DIR) + "model.vert", std::string(SHADERS_DIR) + "model.frag");
+    shader = std::make_shared<Shader>(std::string(SHADERS_DIR) + "chess.vert",
+                                          std::string(SHADERS_DIR) + "chess.frag");
+
 
     camera = PerspectiveCamera();
     camera.SetFrustrum(PerspectiveCamera::Frustrum(45.0f, width, height, 0.1f, 100.0f));
-    camera.SetMovement(1, 0.0);
+    camera.SetMovement(0, 0.0);
 
-    board = new Board();
+    board = std::make_shared<Board>();
     board->Init();
 
     TextureManager::GetInstance()->LoadTexture2DRGBA("cube_texture",
                                                      std::string(TEXTURES_DIR) + "cube_texture.png",
-                                                     0, false);
-    
+                                                     0, true);
+
+    TextureManager::GetInstance()->LoadTexture2DRGBA("floor_texture",
+                                                     std::string(TEXTURES_DIR) + "floor_texture.png",
+                                                     1, false);
+
     shader->Bind();
-    shader->UploadUniformInt("texture1", 0.5f);
+    shader->UploadUniformBool("isBinding", isBinding);
+    shader->Unbind();
 
     return 1;
 }
@@ -122,7 +131,7 @@ unsigned Application::Run()
         glClearColor(0.6f, 0.6f, 0.6f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        board->Render(*shader, camera);
+        board->Render(*shader.get(), camera);
 
         glfwSwapBuffers(window);
     }
@@ -135,24 +144,24 @@ void Application::InputCallback()
     key_input = [&](int key, int sancode, int action, int mods)
     {
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        {
             board->Move(-1, 0);
-        }
+
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        {
             board->Move(1, 0);
-        }
+
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        {
             board->Move(0, 1);
-        }
+
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        {
             board->Move(0, -1);
-        }
+
         if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
-        {
             board->MoveCube();
+
+        if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+        {
+            isBinding = !isBinding;
+            shader->UploadUniformBool("isBinding", isBinding);
         }
     };
 }

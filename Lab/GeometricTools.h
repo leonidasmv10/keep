@@ -4,11 +4,11 @@ namespace GeometricTools
 {
     constexpr std::array<float, 3 * 2> UnitTriangle2D = {-0.5f, -0.5f, 0.5f, -0.5f, 0.0f, 0.5f}; // [2,3]
 
-    inline constexpr float UnitQuad2D[3 * 4] = {
-        1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, -1.0f,
-        -1.0f, 0.0f, -1.0f,
-        -1.0f, 0.0f, 1.0f
+    inline constexpr float UnitQuad2D[5 * 4] = {
+        1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, -1.0f, 0.0f, 1.0f,
+        -1.0f, 0.0f, -1.0f, 1.0f, 0.0f,
+        -1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
     };
 
     const int InidicesQuad2D[2 * 3] = {

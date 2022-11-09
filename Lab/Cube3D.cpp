@@ -48,10 +48,9 @@ void Cube3D::Init()
 
 void Cube3D::Render(Shader& shader, PerspectiveCamera& camera)
 {
-    glActiveTexture(GL_TEXTURE0);
-    glActiveTexture(GL_TEXTURE1);
-
     shader.Bind();
+    glActiveTexture(GL_TEXTURE0);
+    shader.UploadUniformInt("texture1", 0.0f);
 
     glm::mat4 model = glm::mat4(1.0f);
     const glm::mat4 projection = camera.GetProjectionMatrix();
@@ -59,6 +58,9 @@ void Cube3D::Render(Shader& shader, PerspectiveCamera& camera)
 
     shader.UploadUniformMat4("projection", projection);
     shader.UploadUniformMat4("view", view);
+
+    shader.UploadUniformFloat("mixed", 0.5f);
+    shader.UploadUniformFloat("blending", 0.9f);
 
     model = glm::scale(model, scale);
     model = glm::translate(model, position);
