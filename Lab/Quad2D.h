@@ -3,6 +3,7 @@
 
 #include "PerspectiveCamera.h"
 #include "Shader.h"
+#include "VertexArray.h"
 
 class Quad2D
 {
@@ -44,7 +45,11 @@ public:
     }
 
 private:
-    unsigned int VBO, VAO, EBO;
+    unsigned int EBO;
+
+    std::shared_ptr<VertexArray> vertexArray;
+    std::shared_ptr<VertexBuffer> vertexBuffer;
+    std::shared_ptr<IndexBuffer> elementBuffer;
 
     glm::vec3 position;
     glm::vec3 scale;

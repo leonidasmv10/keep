@@ -24,37 +24,25 @@ Quad2D::Quad2D(const glm::vec3& position, const glm::vec3& scale)
 
 Quad2D::~Quad2D()
 {
-    glDisableVertexAttribArray(0);
-    glDeleteBuffers(1, &VBO);
-    glDeleteVertexArrays(1, &VAO);
 }
 
 void Quad2D::Init()
 {
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    glBindVertexArray(VAO);
+    vertexArray = std::make_shared<VertexArray>();
+    vertexBuffer = std::make_shared<VertexBuffer>(GeometricTools::UnitQuad2D, sizeof(GeometricTools::UnitQuad2D));
+    elementBuffer = std::make_shared<IndexBuffer>(GeometricTools::InidicesQuad2D, sizeof(GeometricTools::UnitQuad2D));
+    
+    vertexArray->Bind();
+    vertexBuffer->Bind();
+    elementBuffer->Bind();
+    
+    vertexArray->AttribPointer(3, 3, (void*)0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GeometricTools::UnitQuad2D), GeometricTools::UnitQuad2D, GL_STATIC_DRAW);
+    vertexBuffer->Unbind();
+    vertexArray->Unbind();
+    elementBuffer->Unbind();
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GeometricTools::InidicesQuad2D), GeometricTools::InidicesQuad2D, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-    glBindBuffer(GL_ARRAY_BUFFER, 0); 
-
-    // remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-    // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-    glBindVertexArray(0); 
+    vertexArray->AddVertexBuffer(vertexBuffer);
 }
 
 void Quad2D::Render(Shader& shader, PerspectiveCamera& camera)
@@ -76,8 +64,7 @@ void Quad2D::Render(Shader& shader, PerspectiveCamera& camera)
     model = glm::scale(model, scale);
     model = glm::translate(model, position);
     shader.UploadUniformMat4("model", model);
-    
-    glBindVertexArray(VAO); 
+
+    vertexArray->Bind();
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    
 }

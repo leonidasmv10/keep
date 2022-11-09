@@ -24,6 +24,8 @@ public:
     // Set index buffer
     void SetIndexBuffer(const std::shared_ptr<IndexBuffer> &indexBuffer);
 
+    void AttribPointer(GLsizeiptr size, GLintptr offset, const void* data);
+
     //Get the index buffer
     const std::shared_ptr<IndexBuffer> &GetIndexBuffer() const {return IdxBuffer;}
 
@@ -31,6 +33,7 @@ private:
     GLuint m_vertexArrayID;
     std::vector<std::shared_ptr<VertexBuffer>> VertexBuffers;
     std::shared_ptr<IndexBuffer> IdxBuffer;
+    GLuint IdVertexAttrib = 0;
 
     // Get the vertex buffers
     const std::vector<std::shared_ptr<VertexBuffer>> &GetVertexBuffers() const {return VertexBuffers;}

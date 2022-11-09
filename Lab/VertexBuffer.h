@@ -8,8 +8,7 @@ class VertexBuffer
 public:
     // Constructor. It initializes with a data buffer and the size of it.
     // Note that the buffer will be bound on construction.
-    // VertexBuffer(const void* vertices, GLsizei size);
-    VertexBuffer(const float* vertices, GLsizei size);
+    VertexBuffer(const void* vertices , GLsizei size);
     ~VertexBuffer();
 
     // Bind the vertex buffer

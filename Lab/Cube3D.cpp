@@ -27,18 +27,21 @@ Cube3D::Cube3D(const glm::vec3& position, const glm::vec3& scale)
 
 Cube3D::~Cube3D()
 {
-   
 }
 
 void Cube3D::Init()
 {
     vertexArray = std::make_shared<VertexArray>();
+    vertexBuffer = std::make_shared<VertexBuffer>(GeometricTools::UnitCube3D, sizeof(GeometricTools::UnitCube3D));
+
     vertexArray->Bind();
+    vertexBuffer->Bind();
 
-    vertexBuffer = std::make_shared<VertexBuffer>(GeometricTools::UnitCube3D, 5);
+    vertexArray->AttribPointer(3, 5, (void*)0);
+    vertexArray->AttribPointer(2, 5, (void*)(3 * sizeof(float)));
 
-    vertexBuffer->BufferSubData(3, 5, (void*)0);
-    vertexBuffer->BufferSubData(2, 5, (void*)(3 * sizeof(float)));
+    vertexBuffer->Unbind();
+    vertexArray->Unbind();
 
     vertexArray->AddVertexBuffer(vertexBuffer);
 }
@@ -49,20 +52,20 @@ void Cube3D::Render(Shader& shader, PerspectiveCamera& camera)
     glActiveTexture(GL_TEXTURE1);
 
     shader.Bind();
-    
+
     glm::mat4 model = glm::mat4(1.0f);
     const glm::mat4 projection = camera.GetProjectionMatrix();
     const glm::mat4 view = camera.GetViewMatrix();
 
     shader.UploadUniformMat4("projection", projection);
     shader.UploadUniformMat4("view", view);
-    
+
     model = glm::scale(model, scale);
     model = glm::translate(model, position);
-    
+
     shader.UploadUniformMat4("model", model);
     shader.UploadUniformVec4("color", color);
-    
+
     vertexArray->Bind();
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }

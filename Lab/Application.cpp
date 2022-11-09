@@ -99,8 +99,7 @@ unsigned Application::Init()
     TextureManager::GetInstance()->LoadTexture2DRGBA("cube_texture",
                                                      std::string(TEXTURES_DIR) + "cube_texture.png",
                                                      0, false);
-
-
+    
     shader->Bind();
     shader->UploadUniformInt("texture1", 0.5f);
 

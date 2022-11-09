@@ -30,3 +30,9 @@ void VertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer
 {
     this->IdxBuffer = indexBuffer;
 }
+
+void VertexArray::AttribPointer(GLsizeiptr size, GLintptr offset, const void* data)
+{
+    glVertexAttribPointer(IdVertexAttrib, size, GL_FLOAT, GL_FALSE, offset * sizeof(float), data);
+    glEnableVertexAttribArray(IdVertexAttrib++);
+}
